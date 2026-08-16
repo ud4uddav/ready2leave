@@ -1,122 +1,202 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from 'react';
+import './App.css';
+
+const defaultItems = [
+  { id: 1, name: 'Lights are off', category: 'Home', completed: false },
+  { id: 2, name: 'Gas is off', category: 'Home', completed: false },
+  { id: 3, name: 'Water taps are closed', category: 'Home', completed: false },
+  { id: 4, name: 'Door is locked', category: 'Home', completed: false },
+  { id: 5, name: 'Mobile', category: 'Essentials', completed: false },
+  { id: 6, name: 'Keys', category: 'Essentials', completed: false },
+  { id: 7, name: 'Wallet', category: 'Essentials', completed: false },
+];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [items, setItems] = useState(() => {
+    const savedItems = localStorage.getItem('ready2leave-items');
+    return savedItems ? JSON.parse(savedItems) : defaultItems;
+  });
+
+  const [newItem, setNewItem] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem('ready2leave-items', JSON.stringify(items));
+  }, [items]);
+
+  const toggleItem = (id) => {
+    setItems((currentItems) =>
+      currentItems.map((item) =>
+        item.id === id
+          ? { ...item, completed: !item.completed }
+          : item
+      )
+    );
+  };
+
+  const resetChecklist = () => {
+    setItems((currentItems) =>
+      currentItems.map((item) => ({
+        ...item,
+        completed: false,
+      }))
+    );
+  };
+
+  const addItem = (event) => {
+    event.preventDefault();
+
+    const trimmedItem = newItem.trim();
+
+    if (!trimmedItem) return;
+
+    const item = {
+      id: Date.now(),
+      name: trimmedItem,
+      category: 'Custom',
+      completed: false,
+    };
+
+    setItems((currentItems) => [...currentItems, item]);
+    setNewItem('');
+  };
+
+  const removeItem = (id) => {
+    setItems((currentItems) =>
+      currentItems.filter((item) => item.id !== id)
+    );
+  };
+
+  const completedCount = items.filter(
+    (item) => item.completed
+  ).length;
+
+  const allCompleted =
+    items.length > 0 && completedCount === items.length;
+
+  const homeItems = items.filter(
+    (item) => item.category === 'Home'
+  );
+
+  const essentialItems = items.filter(
+    (item) => item.category === 'Essentials'
+  );
+
+  const customItems = items.filter(
+    (item) => item.category === 'Custom'
+  );
+
+  const renderItem = (item) => (
+    <div className={`checklist-item ${item.completed ? 'completed' : ''}`} key={item.id}>
+      <label>
+        <input
+          type="checkbox"
+          checked={item.completed}
+          onChange={() => toggleItem(item.id)}
+        />
+        <span>{item.name}</span>
+      </label>
+
+      {item.category === 'Custom' && (
+        <button
+          className="delete-button"
+          onClick={() => removeItem(item.id)}
+          aria-label={`Delete ${item.name}`}
+        >
+          ×
+        </button>
+      )}
+    </div>
+  );
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app">
+      <header className="header">
+        <div className="logo">✓</div>
+        <h1>Ready2Leave</h1>
+        <p>Before you leave, make sure everything is okay.</p>
+      </header>
+
+      <main>
+        {allCompleted && (
+          <div className="success-message">
+            <span>🎉</span>
+            <div>
+              <strong>You're Ready2Leave!</strong>
+              <p>Everything on your checklist is complete.</p>
+            </div>
+          </div>
+        )}
+
+        <div className="progress-card">
+          <div>
+            <strong>{completedCount} / {items.length}</strong>
+            <span> completed</span>
+          </div>
+
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{
+                width: `${items.length ? (completedCount / items.length) * 100 : 0}%`,
+              }}
+            />
+          </div>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
+
+        {homeItems.length > 0 && (
+          <section className="checklist-section">
+            <h2>🏠 Home</h2>
+            <div className="checklist">
+              {homeItems.map(renderItem)}
+            </div>
+          </section>
+        )}
+
+        {essentialItems.length > 0 && (
+          <section className="checklist-section">
+            <h2>🎒 Essentials</h2>
+            <div className="checklist">
+              {essentialItems.map(renderItem)}
+            </div>
+          </section>
+        )}
+
+        {customItems.length > 0 && (
+          <section className="checklist-section">
+            <h2>📝 Custom</h2>
+            <div className="checklist">
+              {customItems.map(renderItem)}
+            </div>
+          </section>
+        )}
+
+        <section className="add-section">
+          <h2>Add something</h2>
+
+          <form onSubmit={addItem} className="add-form">
+            <input
+              type="text"
+              placeholder="e.g. Laptop"
+              value={newItem}
+              onChange={(event) => setNewItem(event.target.value)}
+            />
+            <button type="submit">Add</button>
+          </form>
+        </section>
+
         <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          className="reset-button"
+          onClick={resetChecklist}
         >
-          Count is {count}
+          Reset Checklist
         </button>
-      </section>
+      </main>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <footer>
+        <p>ud4uddav</p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
