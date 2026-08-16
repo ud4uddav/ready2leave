@@ -2,6 +2,44 @@
   box-sizing: border-box;
 }
 
+:root {
+  --bg: #f4f7f5;
+  --text: #17201a;
+  --muted: #69736c;
+  --card-bg: #ffffff;
+  --card-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  --accent: #17201a;
+  --progress-track: #e8ece9;
+  --success-bg: #e7f5ea;
+  --success-text: #245c31;
+  --item-bg: #f7f9f7;
+  --item-hover: #eef2ef;
+  --item-completed: #8a948d;
+  --input-border: #d9dfda;
+  --subtle-text: #929b94;
+  --danger-muted: #9ca59e;
+  --danger-hover: #c0392b;
+}
+
+[data-theme='dark'] {
+  --bg: #0f1512;
+  --text: #e6efe8;
+  --muted: #9aa8a0;
+  --card-bg: #1a2420;
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  --accent: #dfe9e2;
+  --progress-track: #2b3832;
+  --success-bg: #1e3b2a;
+  --success-text: #c8ecd2;
+  --item-bg: #223029;
+  --item-hover: #2a3a32;
+  --item-completed: #a1b2a7;
+  --input-border: #3b4d43;
+  --subtle-text: #8d9b93;
+  --danger-muted: #8c9991;
+  --danger-hover: #ff8b7d;
+}
+
 body {
   margin: 0;
   font-family:
@@ -10,8 +48,9 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  background: #f4f7f5;
-  color: #17201a;
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 button,
@@ -43,10 +82,23 @@ button {
   align-items: center;
   justify-content: center;
   border-radius: 18px;
-  background: #17201a;
-  color: white;
+  background: var(--accent);
+  color: var(--card-bg);
   font-size: 30px;
   font-weight: 700;
+}
+
+.theme-toggle {
+  border: 1px solid var(--input-border);
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: var(--card-bg);
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.theme-toggle:hover {
+  background: var(--item-hover);
 }
 
 .header h1 {
@@ -58,16 +110,16 @@ button {
 .header p {
   margin: 8px auto 0;
   max-width: 400px;
-  color: #69736c;
+  color: var(--muted);
   line-height: 1.5;
 }
 
 .progress-card {
-  background: white;
+  background: var(--card-bg);
   padding: 20px;
   border-radius: 18px;
   margin-bottom: 18px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--card-shadow);
 }
 
 .progress-card strong {
@@ -75,20 +127,20 @@ button {
 }
 
 .progress-card span {
-  color: #737d76;
+  color: var(--muted);
 }
 
 .progress-bar {
   height: 9px;
   margin-top: 14px;
-  background: #e8ece9;
+  background: var(--progress-track);
   border-radius: 999px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background: #17201a;
+  background: var(--accent);
   border-radius: 999px;
   transition: width 0.25s ease;
 }
@@ -100,8 +152,8 @@ button {
   padding: 18px;
   margin-bottom: 18px;
   border-radius: 18px;
-  background: #e7f5ea;
-  color: #245c31;
+  background: var(--success-bg);
+  color: var(--success-text);
 }
 
 .success-message > span {
@@ -119,11 +171,11 @@ button {
 
 .checklist-section,
 .add-section {
-  background: white;
+  background: var(--card-bg);
   border-radius: 18px;
   padding: 20px;
   margin-bottom: 18px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--card-shadow);
 }
 
 .checklist-section h2,
@@ -144,12 +196,12 @@ button {
   justify-content: space-between;
   padding: 13px;
   border-radius: 12px;
-  background: #f7f9f7;
+  background: var(--item-bg);
   transition: 0.2s ease;
 }
 
 .checklist-item:hover {
-  background: #eef2ef;
+  background: var(--item-hover);
 }
 
 .checklist-item label {
@@ -163,24 +215,24 @@ button {
 .checklist-item input {
   width: 21px;
   height: 21px;
-  accent-color: #17201a;
+  accent-color: var(--accent);
 }
 
 .checklist-item.completed span {
   text-decoration: line-through;
-  color: #8a948d;
+  color: var(--item-completed);
 }
 
 .delete-button {
   border: 0;
   background: transparent;
-  color: #9ca59e;
+  color: var(--danger-muted);
   font-size: 22px;
   padding: 2px 6px;
 }
 
 .delete-button:hover {
-  color: #c0392b;
+  color: var(--danger-hover);
 }
 
 .add-form {
@@ -192,40 +244,42 @@ button {
   min-width: 0;
   flex: 1;
   padding: 13px;
-  border: 1px solid #d9dfda;
+  border: 1px solid var(--input-border);
+  background: var(--card-bg);
+  color: var(--text);
   border-radius: 11px;
   outline: none;
 }
 
 .add-form input:focus {
-  border-color: #17201a;
+  border-color: var(--accent);
 }
 
 .add-form button {
   border: 0;
   padding: 0 18px;
   border-radius: 11px;
-  background: #17201a;
-  color: white;
+  background: var(--accent);
+  color: var(--card-bg);
 }
 
 .reset-button {
   width: 100%;
   padding: 14px;
-  border: 1px solid #d9dfda;
+  border: 1px solid var(--input-border);
   border-radius: 12px;
-  background: white;
-  color: #4d5750;
+  background: var(--card-bg);
+  color: var(--muted);
 }
 
 .reset-button:hover {
-  background: #f4f6f4;
+  background: var(--item-hover);
 }
 
 footer {
   padding: 24px 0 8px;
   text-align: center;
-  color: #929b94;
+  color: var(--subtle-text);
   font-size: 0.85rem;
 }
 

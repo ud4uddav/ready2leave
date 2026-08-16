@@ -12,6 +12,18 @@ const defaultItems = [
 ];
 
 function App() {
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('ready2leave-theme');
+
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      return savedTheme;
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
+      ? 'dark'
+      : 'light';
+  });
+
   const [items, setItems] = useState(() => {
     const savedItems = localStorage.getItem('ready2leave-items');
     return savedItems ? JSON.parse(savedItems) : defaultItems;
@@ -22,6 +34,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('ready2leave-items', JSON.stringify(items));
   }, [items]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ready2leave-theme', theme);
+  }, [theme]);
 
   const toggleItem = (id) => {
     setItems((currentItems) =>
@@ -39,6 +56,12 @@ function App() {
         ...item,
         completed: false,
       }))
+    );
+  };
+
+  const toggleTheme = () => {
+    setTheme((currentTheme) =>
+      currentTheme === 'dark' ? 'light' : 'dark'
     );
   };
 
@@ -112,6 +135,14 @@ function App() {
     <div className="app">
       <header className="header">
         <div className="logo">✓</div>
+        <button
+          type="button"
+          className="theme-toggle"
+          onClick={toggleTheme}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {theme === 'dark' ? '☀️ Light mode' : '🌙 Dark mode'}
+        </button>
         <h1>Ready2Leave</h1>
         <p>Before you leave, make sure everything is okay.</p>
       </header>
@@ -193,7 +224,7 @@ function App() {
       </main>
 
       <footer>
-        <p>ud4uddav</p>
+        <p>{'<ud4uddav>'}</p>
       </footer>
     </div>
   );
