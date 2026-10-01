@@ -219,7 +219,7 @@ function App() {
           className="reset-button"
           onClick={resetChecklist}
         >
-          Reset Checklist
+          Done for Now
         </button>
       </main>
 
