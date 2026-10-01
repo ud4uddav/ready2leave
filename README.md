@@ -1,16 +1,75 @@
-# React + Vite
+# Ready2Leave
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple **before-you-leave checklist** so you can confirm home is safe and you have what you need before walking out the door.
 
-Currently, two official plugins are available:
+**[Live demo → ready2leave.vercel.app](https://ready2leave.vercel.app/)**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## What it does
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Ready2Leave helps you run through a quick routine:
 
-## Expanding the ESLint configuration
+- **Home** — lights, gas, water taps, door lock
+- **Essentials** — phone, keys, wallet
+- **Custom items** — add anything else (e.g. laptop, charger)
+- **Progress** — see how many tasks are done at a glance
+- **Done for Now** — clear all checkmarks when you’re ready to start fresh
+- **Light / dark mode** — matches your preference (saved in the browser)
+- **Installable (PWA)** — add to your home screen on mobile for quick access
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Your checklist and theme are stored in **localStorage**, so they persist between visits on the same device.
+
+---
+
+## Tech stack
+
+| Area | Tools |
+|------|--------|
+| UI | [React 19](https://react.dev/) |
+| Build | [Vite 8](https://vite.dev/) |
+| PWA | [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) |
+| Lint | ESLint + React Hooks plugin |
+| Hosting | [Vercel](https://vercel.com/) |
+
+No backend — the app runs entirely in the browser.
+
+---
+
+## Run locally
+
+```bash
+git clone https://github.com/ud4uddav/ready2leave.git
+cd ready2leave
+npm install
+npm run dev
+```
+
+Open the URL Vite prints (usually `http://localhost:5173`).
+
+### Other scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run build` | Production build to `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Run ESLint |
+
+---
+
+## Project structure
+
+```
+src/
+  App.jsx      # Checklist logic and UI
+  App.css      # Layout and theme styles
+  main.jsx     # App entry
+  index.css    # Global styles
+public/        # Static assets and PWA icons
+```
+
+---
+
+## Author
+
+Built by **ud4uddav** — [GitHub](https://github.com/ud4uddav/ready2leave)
